@@ -21,7 +21,6 @@ public class SpringMongoConfig {
         if(mongoDBURL==null || mongoDBURL.isEmpty()){
             mongoDBURL="mongodb://"+devMongoHost+":"+devMongoPort+"/";
         }
-        System.out.println(mongoDBURL);
         return new SimpleMongoDbFactory(new MongoClient(new MongoClientURI(mongoDBURL)), DBName);
     }
 
