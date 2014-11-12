@@ -1,37 +1,67 @@
 package newsfeeds.models;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * Created by samarth on 29/10/14.
  */
 public class NewsFeedMetaData {
-    public String name;
-    public String feedUrl;
-    public String thumbnailUrl;
+
+    @Id
+    @Field(value = "news_id")
+    private String id;
+    private String name;
+    private String feedUrl;
+    private String thumbnailUrl;
+    private String description;
     public boolean isPublished;
 
-    public void fromJsonObject(JSONObject jsonObject) throws JSONException {
-        name = jsonObject.getString("name");
-        feedUrl = jsonObject.getString("feedUrl");
-        thumbnailUrl = jsonObject.getString("thumbnailUrl");
-        isPublished = jsonObject.getBoolean("isPublished");
-    }
-    public JSONObject toJsonObject() throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name",name);
-        jsonObject.put("feedUrl",feedUrl);
-        jsonObject.put("thumbnailUrl",thumbnailUrl);
-        jsonObject.put("isPublished",isPublished);
-        return jsonObject;
-    }
-    public String toJsonString() throws JSONException {
-        return toJsonObject().toString();
-    }
-    public void fromJsonString(String jsonString) throws JSONException {
-        JSONObject jsonObject = new JSONObject(jsonString);
-        fromJsonObject(jsonObject);
+    public String getDescription() {
+        return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFeedUrl() {
+        return feedUrl;
+    }
+
+    public void setFeedUrl(String feedUrl) {
+        this.feedUrl = feedUrl;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public boolean getIsPublished() {
+        return isPublished;
+    }
+
+    public void setIsPublished(boolean isPublished) {
+        this.isPublished = isPublished;
+    }
 }

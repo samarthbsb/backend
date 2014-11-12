@@ -10,4 +10,5 @@
     <!-- Root Context: defines shared resources visible to all other web components -->
     <context:annotation-config/>
     <bean id="apiService" class="newsfeeds.services.ApiService"/>
+    <bean id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
 </beans>
