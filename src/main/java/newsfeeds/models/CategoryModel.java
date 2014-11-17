@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Document(collection = "category")
 @TypeAlias(value = "cat")
-public class CategoryModel extends BaseModel{
+public class CategoryModel extends BaseModel {
 
     @Indexed(unique = true)
     private String category;

@@ -1,5 +1,6 @@
 package newsfeeds.models;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,13 +15,42 @@ public class BaseModel {
     @Id
     @Field(value = "id")
     private String id;
+
     @Field(value = "created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Date createdAt = new Date();
+    @JsonProperty(value="created_at")
+    private Date createdAt;
 
     @Field(value = "updated_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Date updatedAt = new Date();
+    @JsonProperty(value = "updated_at")
+    private Date updatedAt;
+
+    @Field(value = "is_published")
+    private boolean isPublished;
+
+    @Field(value = "is_deleted")
+    private boolean isDeleted;
+
+    @JsonProperty(value = "is_deleted")
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    @JsonProperty(value = "is_deleted")
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    @JsonProperty(value="is_published")
+    public boolean isPublished() {
+        return isPublished;
+    }
+
+    @JsonProperty(value = "is_published")
+    public void setIsPublished(boolean isPublished) {
+        this.isPublished = isPublished;
+    }
 
     /**
      * Returns the identifier of the document.
@@ -32,6 +62,7 @@ public class BaseModel {
         return id;
     }
 
+    @JsonProperty(value="created_at")
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -40,26 +71,29 @@ public class BaseModel {
         this.id = id;
     }
 
-    public void setCreatedAt( Date createdAt ){
+    @JsonProperty(value="created_at")
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt(){
+    @JsonProperty(value = "updated_at")
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt( Date updatedAt ){
+    @JsonProperty(value = "updated_at")
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
     @Override
     public boolean equals(Object obj) {
 
-        if (this == obj) {
+        if(this == obj) {
             return true;
         }
 
-        if (this.id == null || obj == null || !(this.getClass().equals(obj.getClass()))) {
+        if(this.id == null || obj == null || !(this.getClass().equals(obj.getClass()))) {
             return false;
         }
 
@@ -70,7 +104,7 @@ public class BaseModel {
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id.hashCode();
+        return id == null? 0 : id.hashCode();
     }
 
 }

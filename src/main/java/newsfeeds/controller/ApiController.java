@@ -3,7 +3,7 @@ package newsfeeds.controller;
 import newsfeeds.helpers.MongoHelper;
 import newsfeeds.models.CategoryModel;
 import newsfeeds.models.NewsFeedMetaData;
-import newsfeeds.models.ResponseWrapper;
+import newsfeeds.wrappers.ResponseWrapper;
 import newsfeeds.services.ApiService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,6 @@ public class ApiController {
     ObjectMapper mapper;
 
     /**
-     *
      * @param request
      * @param response
      * @throws IOException
@@ -43,24 +42,24 @@ public class ApiController {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setResult(list);
         responseWrapper.setSuccess(true);
-        responseWrapper.setCount(list.size());
+//        responseWrapper.setCount(list.size());
         response.setContentType("application/json");
+        response.getOutputStream().write("ok".getBytes());
         mapper.writeValue(response.getWriter(), responseWrapper);
     }
 
     @RequestMapping(value = { "/getCategories" }, method = RequestMethod.GET)
     public void getPublishedCategories(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<CategoryModel> list = MongoHelper.find(query(Criteria.where("newsList.isPublished").in(true)),CategoryModel.class);
+        List<CategoryModel> list = MongoHelper.find(query(Criteria.where("newsList.isPublished").in(true)), CategoryModel.class);
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setResult(list);
         responseWrapper.setSuccess(true);
-        responseWrapper.setCount(list.size());
+//        responseWrapper.setCount(list.size());
         response.setContentType("application/json");
         mapper.writeValue(response.getWriter(), responseWrapper);
     }
 
     /**
-     *
      * @param request
      * @param response
      * @param requestBody
@@ -77,7 +76,6 @@ public class ApiController {
     }
 
     /**
-     *
      * @param request
      * @param response
      * @param requestBody
@@ -98,7 +96,6 @@ public class ApiController {
     }
 
     /**
-     *
      * @param request
      * @param response
      * @param category_id
@@ -112,15 +109,14 @@ public class ApiController {
 
     }
 
-
-    @RequestMapping(value ={"/dropDbCollection"},method = RequestMethod.GET)
-    public void dropCategoryCollection(HttpServletRequest request,HttpServletResponse response,@RequestParam(value= "sec-key", defaultValue = "") String secKey) throws IOException {
+    @RequestMapping(value = { "/dropDbCollection" }, method = RequestMethod.GET)
+    public void dropCategoryCollection(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "sec-key", defaultValue = "") String secKey) throws IOException {
         response.setContentType("application/json");
-        if(secKey.equals("killmee")){
+        if(secKey.equals("killmee")) {
             MongoHelper.dropCollection(CategoryModel.class);
             response.getWriter().write("{\"dropped\":true}");
         }
-        else{
+        else {
             response.getWriter().write("{\"dropped\":false}");
         }
 
