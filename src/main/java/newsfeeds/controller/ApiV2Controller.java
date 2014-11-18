@@ -1,6 +1,9 @@
 package newsfeeds.controller;
 
 import newsfeeds.Utils.Utils;
+import newsfeeds.helpers.MongoHelper;
+import newsfeeds.models.CategoryDataModel;
+import newsfeeds.models.NewsFeedDataModel;
 import newsfeeds.services.CategoryService;
 import newsfeeds.services.CategoryServiceImpl;
 import newsfeeds.wrappers.ResponseWrapper;
@@ -46,7 +49,7 @@ public class ApiV2Controller {
     @ResponseBody
     public void addNews(HttpServletRequest request, HttpServletResponse response,
             @RequestBody String content,
-            @RequestParam(value = "category_id") String category_id) throws IOException {
+            @RequestParam(value = "news_id") String category_id) throws IOException {
         ResponseWrapper responseWrapper = categoryService.addNewsFeedToCategory(content, category_id);
         response.setContentType("application/json");
         Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
@@ -72,6 +75,7 @@ public class ApiV2Controller {
     @RequestMapping(value = "/getAllData", method = RequestMethod.GET)
     public void getAllNewsFeeds(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ResponseWrapper responseWrapper = categoryService.getAllData();
+        response.setContentType("application/json");
         Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
     }
 
@@ -85,6 +89,7 @@ public class ApiV2Controller {
     public void searchNews(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(value = "query") String query) throws IOException {
         ResponseWrapper responseWrapper = categoryService.searchNewsFeedByName(query);
+        response.setContentType("application/json");
         Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
     }
 
@@ -99,11 +104,12 @@ public class ApiV2Controller {
      */
     @RequestMapping(value = "/updateCategory", method = RequestMethod.GET)
     public void updateCategory(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(value = "category_id") String category_id,
+            @RequestParam(value = "news_id", defaultValue = "") String category_id,
             @RequestParam(value = "name", defaultValue = "") String name,
             @RequestParam(value = "background_color", defaultValue = "") String background_color,
             @RequestParam(value = "font_color", defaultValue = "") String font_color) throws IOException {
         ResponseWrapper responseWrapper = new ResponseWrapper();
+        response.setContentType("application/json");
         if(category_id == null || category_id.trim().isEmpty()) {
             responseWrapper.setSuccess(false);
             responseWrapper.setResult(null);
@@ -137,12 +143,13 @@ public class ApiV2Controller {
      */
     @RequestMapping(value = "/updateNews", method = RequestMethod.GET)
     public void updateNews(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(value = "news_id") String news_id,
+            @RequestParam(value = "news_id", defaultValue = "") String news_id,
             @RequestParam(value = "name", defaultValue = "") String name,
             @RequestParam(value = "description", defaultValue = "") String description,
             @RequestParam(value = "thumbnailUrl", defaultValue = "") String thumbnailUrl,
             @RequestParam(value = "feedUrl", defaultValue = "") String feedUrl) throws IOException {
         ResponseWrapper responseWrapper = new ResponseWrapper();
+        response.setContentType("application/json");
         if(news_id == null || news_id.trim().isEmpty()) {
             responseWrapper.setSuccess(false);
             responseWrapper.setResult(null);
@@ -167,4 +174,109 @@ public class ApiV2Controller {
         Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @param category_id
+     * @param secKey
+     * @throws IOException
+     */
+    @RequestMapping(value = "/deleteCategory", method = RequestMethod.GET)
+    public void deleteCategory(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "category_id", defaultValue = "") String category_id,
+            @RequestParam(value = "sec-key") String secKey)
+            throws IOException {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        response.setContentType("application/json");
+        if(!secKey.trim().isEmpty() && secKey.equals("killmee")) {
+            if(!category_id.trim().isEmpty()) {
+                Update update = new Update();
+                update.set("is_deleted", true);
+                responseWrapper = categoryService.updateCategoryDetailsById(category_id, update);
+                Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
+                return;
+            }
+        }
+        responseWrapper.setSuccess(false);
+        responseWrapper.setStatus("Either Secret Key is not correct or Category Id is empty");
+        responseWrapper.setResult(null);
+        Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
+    }
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @param news_id
+     * @param secKey
+     * @throws IOException
+     */
+    @RequestMapping(value = "/deleteNews", method = RequestMethod.GET)
+    public void deleteNews(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "news_id", defaultValue = "") String news_id, @RequestParam(value = "sec-key") String secKey)
+            throws IOException {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        response.setContentType("application/json");
+        if(!secKey.trim().isEmpty() && secKey.equals("killmee")) {
+            if(!news_id.trim().isEmpty()) {
+                Update update = new Update();
+                update.set("is_deleted", true);
+                responseWrapper = categoryService.updateNewsFeedDetailsById(news_id, update);
+                Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
+                return;
+            }
+        }
+        responseWrapper.setSuccess(false);
+        responseWrapper.setStatus("Either Secret Key is not correct or News Id is empty");
+        responseWrapper.setResult(null);
+        Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
+    }
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @param news_id
+     * @throws IOException
+     */
+    @RequestMapping(value = "/unpublishNews", method = RequestMethod.GET)
+    public void deleteNews(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "news_id", defaultValue = "") String news_id)
+            throws IOException {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        response.setContentType("application/json");
+        if(!news_id.trim().isEmpty()) {
+            responseWrapper = categoryService.unpublishNewsById(news_id);
+        }
+        else {
+            responseWrapper.setSuccess(false);
+            responseWrapper.setStatus("News Id is empty");
+            responseWrapper.setResult(null);
+        }
+        Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
+    }
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @param secKey
+     * @throws IOException
+     */
+    @RequestMapping(value = { "/dropDbCollections" }, method = RequestMethod.GET)
+    public void dropCategoryCollection(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "sec-key", defaultValue = "") String secKey) throws IOException {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        response.setContentType("application/json");
+        if(secKey.equals("killmee")) {
+            MongoHelper.dropCollection(CategoryDataModel.class);
+            MongoHelper.dropCollection(NewsFeedDataModel.class);
+            responseWrapper.setStatus("Dropped Collections categories and newsfeeds");
+            responseWrapper.setSuccess(true);
+            responseWrapper.setResult("");
+        }
+        else {
+            responseWrapper.setStatus("Collections couldn't be dropped");
+            responseWrapper.setSuccess(false);
+            responseWrapper.setResult("");
+        }
+        Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
+    }
 }
