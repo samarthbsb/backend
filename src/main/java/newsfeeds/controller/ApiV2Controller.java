@@ -49,7 +49,7 @@ public class ApiV2Controller {
     @ResponseBody
     public void addNews(HttpServletRequest request, HttpServletResponse response,
             @RequestBody String content,
-            @RequestParam(value = "news_id") String category_id) throws IOException {
+            @RequestParam(value = "category_id") String category_id) throws IOException {
         ResponseWrapper responseWrapper = categoryService.addNewsFeedToCategory(content, category_id);
         response.setContentType("application/json");
         Utils.getObjectMapper().writeValue(response.getOutputStream(), responseWrapper);
@@ -104,7 +104,7 @@ public class ApiV2Controller {
      */
     @RequestMapping(value = "/updateCategory", method = RequestMethod.GET)
     public void updateCategory(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(value = "news_id", defaultValue = "") String category_id,
+            @RequestParam(value = "category_id", defaultValue = "") String category_id,
             @RequestParam(value = "name", defaultValue = "") String name,
             @RequestParam(value = "background_color", defaultValue = "") String background_color,
             @RequestParam(value = "font_color", defaultValue = "") String font_color) throws IOException {
