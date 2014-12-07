@@ -30,7 +30,7 @@ public class ApiV2Controller {
      * @param content
      * @throws IOException
      */
-    @RequestMapping(value = "/addCategory", method = RequestMethod.POST, headers = "Accept=*")
+    @RequestMapping(value = "/addCategory", method = RequestMethod.POST)
     @ResponseBody
     public void addCategory(HttpServletRequest request, HttpServletResponse response, @RequestBody String content) throws IOException {
         ResponseWrapper responseWrapper = categoryService.createCategory(content);
@@ -45,7 +45,7 @@ public class ApiV2Controller {
      * @param category_id
      * @throws IOException
      */
-    @RequestMapping(value = "/addNewsFeed", method = RequestMethod.POST, headers = "Accept=*")
+    @RequestMapping(value = "/addNewsFeed", method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public void addNews(HttpServletRequest request, HttpServletResponse response,
             @RequestBody String content,
@@ -102,10 +102,10 @@ public class ApiV2Controller {
      * @param font_color
      * @throws IOException
      */
-    @RequestMapping(value = "/updateCategory", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateCategory", method = RequestMethod.POST)
     public void updateCategory(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(value = "category_id", defaultValue = "") String category_id,
-            @RequestParam(value = "name", defaultValue = "") String name,
+            @RequestParam(value = "category_name", defaultValue = "") String name,
             @RequestParam(value = "background_color", defaultValue = "") String background_color,
             @RequestParam(value = "font_color", defaultValue = "") String font_color) throws IOException {
         ResponseWrapper responseWrapper = new ResponseWrapper();
@@ -141,13 +141,13 @@ public class ApiV2Controller {
      * @param feedUrl
      * @throws IOException
      */
-    @RequestMapping(value = "/updateNews", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateNews", method = RequestMethod.POST)
     public void updateNews(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(value = "news_id", defaultValue = "") String news_id,
-            @RequestParam(value = "name", defaultValue = "") String name,
+            @RequestParam(value = "news_name", defaultValue = "") String name,
             @RequestParam(value = "description", defaultValue = "") String description,
-            @RequestParam(value = "thumbnailUrl", defaultValue = "") String thumbnailUrl,
-            @RequestParam(value = "feedUrl", defaultValue = "") String feedUrl) throws IOException {
+            @RequestParam(value = "thumbnail_url", defaultValue = "") String thumbnailUrl,
+            @RequestParam(value = "feed_url", defaultValue = "") String feedUrl) throws IOException {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         response.setContentType("application/json");
         if(news_id == null || news_id.trim().isEmpty()) {
@@ -182,7 +182,7 @@ public class ApiV2Controller {
      * @param secKey
      * @throws IOException
      */
-    @RequestMapping(value = "/deleteCategory", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteCategory", method = RequestMethod.POST)
     public void deleteCategory(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "category_id", defaultValue = "") String category_id,
             @RequestParam(value = "sec-key") String secKey)
             throws IOException {
@@ -211,7 +211,7 @@ public class ApiV2Controller {
      * @param secKey
      * @throws IOException
      */
-    @RequestMapping(value = "/deleteNews", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteNews", method = RequestMethod.POST)
     public void deleteNews(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "news_id", defaultValue = "") String news_id, @RequestParam(value = "sec-key") String secKey)
             throws IOException {
         ResponseWrapper responseWrapper = new ResponseWrapper();
@@ -238,7 +238,7 @@ public class ApiV2Controller {
      * @param news_id
      * @throws IOException
      */
-    @RequestMapping(value = "/unpublishNews", method = RequestMethod.GET)
+    @RequestMapping(value = "/unpublishNews", method = RequestMethod.POST)
     public void deleteNews(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "news_id", defaultValue = "") String news_id)
             throws IOException {
         ResponseWrapper responseWrapper = new ResponseWrapper();

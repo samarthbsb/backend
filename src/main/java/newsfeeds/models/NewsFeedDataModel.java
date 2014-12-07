@@ -79,6 +79,8 @@ public class NewsFeedDataModel extends BaseModel {
     public NewsFeedDataModel(){
         super.setCreatedAt(new Date());
         super.setUpdatedAt(new Date());
+        super.setIsPublished(true);
+        super.setIsDeleted(false);
     }
 
 }
