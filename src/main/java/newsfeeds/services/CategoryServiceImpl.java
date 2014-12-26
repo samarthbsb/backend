@@ -9,6 +9,7 @@ import newsfeeds.wrappers.ResponseWrapper;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * Created by samarth on 17/11/14.
  */
+@Component
 public class CategoryServiceImpl implements CategoryService {
 
     /**

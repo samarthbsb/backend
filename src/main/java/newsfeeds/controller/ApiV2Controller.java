@@ -5,8 +5,8 @@ import newsfeeds.helpers.MongoHelper;
 import newsfeeds.models.CategoryDataModel;
 import newsfeeds.models.NewsFeedDataModel;
 import newsfeeds.services.CategoryService;
-import newsfeeds.services.CategoryServiceImpl;
 import newsfeeds.wrappers.ResponseWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,8 @@ import java.io.IOException;
 @RequestMapping(value = "api/v2")
 public class ApiV2Controller {
 
-    CategoryService categoryService = new CategoryServiceImpl();
+    @Autowired
+    CategoryService categoryService;
 
     /**
      * @param request
