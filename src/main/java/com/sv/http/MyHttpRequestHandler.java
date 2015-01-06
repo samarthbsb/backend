@@ -3,23 +3,17 @@
  */
 package com.sv.http;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.sv.handlers.IAuthenticatedUrlRequestHandler;
+import com.sv.handlers.IUrlRequestHandler;
 import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.handler.codec.http.HttpResponseStatus;
-import org.jboss.netty.handler.codec.http.HttpVersion;
+import org.jboss.netty.handler.codec.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 
-import com.sv.handlers.IAuthenticatedUrlRequestHandler;
-import com.sv.handlers.IUrlRequestHandler;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author vaibhav

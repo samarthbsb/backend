@@ -3,9 +3,7 @@
  */
 package com.sv.http;
 
-import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
-
+import com.sv.config.NettyConfig;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.group.ChannelGroup;
@@ -18,7 +16,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.sv.config.NettyConfig;
+import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 
 /**
  * Netty Http Server
@@ -32,6 +31,7 @@ public class MyHttpServer {
     private ChannelGroup                  mqChannelGroup;
     private NioServerSocketChannelFactory serverSocketChannelFactory;
     private ApplicationContext            appContext;
+
 
     private void init() throws Exception {
         initSpringContext();
@@ -94,9 +94,9 @@ public class MyHttpServer {
 
     private void initSpringContext() {
         try {
-
-            System.out.println(" uri : " + System.getProperty("user.dir") + " , " + System.getProperty("java.class.path"));
-            appContext = new ClassPathXmlApplicationContext("root-context.xml");
+            String classpath = System.getProperty("java.class.path");
+            System.out.println(" uri : " + System.getProperty("user.dir") + " , " + classpath);
+            appContext = new ClassPathXmlApplicationContext("config/beans.xml");
             if(appContext instanceof AbstractApplicationContext) {
                 AbstractApplicationContext abstractAppContext = (AbstractApplicationContext) appContext;
                 abstractAppContext.registerShutdownHook();

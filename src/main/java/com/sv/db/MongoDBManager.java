@@ -1,29 +1,22 @@
 package com.sv.db;
 
-import java.math.BigInteger;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
-
 import com.mongodb.*;
-
+import com.mongodb.MapReduceCommand.OutputType;
+import com.mongodb.util.JSON;
+import com.sv.config.MongoDBConfig;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.mongodb.MapReduceCommand.OutputType;
-import com.mongodb.util.JSON;
-import com.sv.config.MongoDBConfig;
-
 import org.springframework.util.CollectionUtils;
+
+import java.math.BigInteger;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 /**
  * @author vaibhav
