@@ -39,7 +39,6 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
     CategoryService             categoryService;
 
     private static final String contentType = "application/json";
-    private Gson                gson        = new Gson();
 
     @Override
     public HttpResponse handleRequest(String requestUri, String requestPayload, MessageEvent event, HttpRequest request) throws Exception {
@@ -49,7 +48,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
         if(requestUri.matches("/api/v2/addNewsFeed.*")) {
             String category_id = Utils.getURLParam(urlParameters, "category_id");
             ResponseWrapper responseWrapper = categoryService.addNewsFeedToCategory(requestPayload, category_id);
-            return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+            return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
         }
         if(request.getMethod().equals(HttpMethod.GET)) {
             if(requestUri.matches("/api/v1/getAllCategories.*")) {
@@ -57,14 +56,14 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
                 ResponseWrapper responseWrapper = new ResponseWrapper();
                 responseWrapper.setResult(list);
                 responseWrapper.setSuccess(true);
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v1/getCategories.*")) {
                 List<CategoryModel> list = MongoHelper.find(query(Criteria.where("newsList.isPublished").in(true)), CategoryModel.class);
                 ResponseWrapper responseWrapper = new ResponseWrapper();
                 responseWrapper.setResult(list);
                 responseWrapper.setSuccess(true);
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v1/getCategories.*")) {
                 String category_id = Utils.getURLParam(urlParameters, "category_id");
@@ -85,16 +84,16 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
             }
             else if(requestUri.matches("/api/v2/getPublishedData.*")) {
                 ResponseWrapper responseWrapper = categoryService.getPublishedData();
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v2/getAllData.*")) {
                 ResponseWrapper responseWrapper = categoryService.getAllData();
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v2/searchNews.*")) {
                 String query = Utils.getURLParam(urlParameters, "query");
                 ResponseWrapper responseWrapper = categoryService.searchNewsFeedByName(query);
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v2/dropDbCollections.*")) {
                 ResponseWrapper responseWrapper = new ResponseWrapper();
@@ -111,7 +110,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
                     responseWrapper.setSuccess(false);
                     responseWrapper.setResult("");
                 }
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
         }
         else if(request.getMethod().equals(HttpMethod.POST)) {
@@ -131,7 +130,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
             }
             else if(requestUri.matches("/api/v2/addCategory.*")) {
                 ResponseWrapper responseWrapper = categoryService.createCategory(requestPayload);
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v2/updateCategory.*")) {
                 String category_id = Utils.getURLParam(urlParameters, "category_id");
@@ -143,7 +142,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
                     responseWrapper.setSuccess(false);
                     responseWrapper.setResult(null);
                     responseWrapper.setStatus("Category ID is required");
-                    return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                    return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
                 }
                 Update update = new Update();
                 if(!name.trim().isEmpty()) {
@@ -156,7 +155,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
                     update.set("background_color", background_color);
                 }
                 responseWrapper = categoryService.updateCategoryDetailsById(category_id, update);
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v2/updateNews.*")) {
                 String news_id = Utils.getURLParam(urlParameters, "news_id");
@@ -169,7 +168,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
                     responseWrapper.setSuccess(false);
                     responseWrapper.setResult(null);
                     responseWrapper.setStatus("News ID is required");
-                    return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                    return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
                 }
                 Update update = new Update();
                 if(!name.trim().isEmpty()) {
@@ -185,7 +184,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
                     update.set("feed_url", feedUrl);
                 }
                 responseWrapper = categoryService.updateNewsFeedDetailsById(news_id, update);
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v2/deleteCategory.*")) {
                 String category_id = Utils.getURLParam(urlParameters, "category_id");
@@ -196,13 +195,13 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
                         Update update = new Update();
                         update.set("is_deleted", true);
                         responseWrapper = categoryService.updateCategoryDetailsById(category_id, update);
-                        return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                        return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
                     }
                 }
                 responseWrapper.setSuccess(false);
                 responseWrapper.setStatus("Either Secret Key is not correct or Category Id is empty");
                 responseWrapper.setResult(null);
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v2/deleteNews.*")) {
                 String news_id = Utils.getURLParam(urlParameters, "news_id");
@@ -213,13 +212,13 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
                         Update update = new Update();
                         update.set("is_deleted", true);
                         responseWrapper = categoryService.updateNewsFeedDetailsById(news_id, update);
-                        return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                        return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
                     }
                 }
                 responseWrapper.setSuccess(false);
                 responseWrapper.setStatus("Either Secret Key is not correct or News Id is empty");
                 responseWrapper.setResult(null);
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             else if(requestUri.matches("/api/v2/unpublishNews.*")) {
                 String news_id = Utils.getURLParam(urlParameters, "news_id");
@@ -232,7 +231,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
                     responseWrapper.setStatus("News Id is empty");
                     responseWrapper.setResult(null);
                 }
-                return Utils.createResponse(gson.toJson(responseWrapper), contentType, HttpResponseStatus.OK);
+                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
             return new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
         }
