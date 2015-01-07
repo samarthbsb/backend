@@ -1,48 +1,36 @@
 package com.sv.handlers;
 
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-import java.util.List;
-import java.util.Map;
-
-import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
-import org.jboss.netty.handler.codec.http.HttpMethod;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.handler.codec.http.HttpResponseStatus;
-import org.jboss.netty.handler.codec.http.HttpVersion;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Controller;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.sv.newsfeeds.helpers.MongoHelper;
 import com.sv.newsfeeds.models.CategoryDataModel;
-import com.sv.newsfeeds.models.CategoryModel;
 import com.sv.newsfeeds.models.NewsFeedDataModel;
-import com.sv.newsfeeds.models.NewsFeedMetaData;
 import com.sv.newsfeeds.services.ApiService;
 import com.sv.newsfeeds.services.CategoryService;
 import com.sv.newsfeeds.wrappers.ResponseWrapper;
 import com.sv.util.Utils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.handler.codec.http.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Controller;
 
-@Controller("/api/(v1|v2)/.*")
+import java.util.List;
+import java.util.Map;
+
+@Controller("/api/v2/.*")
 public class NewsFeedsRequestHandler implements IUrlRequestHandler {
 
     @Autowired
-    ApiService                  apiService;
+    ApiService apiService;
 
     @Autowired
-    CategoryService             categoryService;
+    CategoryService categoryService;
 
     private static final String contentType = "application/json";
 
     @Override
     public HttpResponse handleRequest(String requestUri, String requestPayload, MessageEvent event, HttpRequest request) throws Exception {
-        ObjectMapper mapper = Utils.getObjectMapper();
+        ObjectMapper mapper = com.sv.newsfeeds.Utils.Utils.getObjectMapper();
         Map<String, List<String>> urlParameters = Utils.getUrlParameters(requestUri);
 
         if(requestUri.matches("/api/v2/addNewsFeed.*")) {
@@ -51,38 +39,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
             return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
         }
         if(request.getMethod().equals(HttpMethod.GET)) {
-            if(requestUri.matches("/api/v1/getAllCategories.*")) {
-                List<CategoryModel> list = MongoHelper.fetchAll(CategoryModel.class);
-                ResponseWrapper responseWrapper = new ResponseWrapper();
-                responseWrapper.setResult(list);
-                responseWrapper.setSuccess(true);
-                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
-            }
-            else if(requestUri.matches("/api/v1/getCategories.*")) {
-                List<CategoryModel> list = MongoHelper.find(query(Criteria.where("newsList.isPublished").in(true)), CategoryModel.class);
-                ResponseWrapper responseWrapper = new ResponseWrapper();
-                responseWrapper.setResult(list);
-                responseWrapper.setSuccess(true);
-                return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
-            }
-            else if(requestUri.matches("/api/v1/getCategories.*")) {
-                String category_id = Utils.getURLParam(urlParameters, "category_id");
-                MongoHelper.deleteById(category_id, CategoryModel.class);
-                return Utils.createResponse("{\"deleted\":true}", contentType, HttpResponseStatus.OK);
-            }
-            else if(requestUri.matches("/api/v1/dropDbCollection.*")) {
-                String secKey = Utils.getURLParam(urlParameters, "sec-key");
-                String responseStr = null;
-                if(secKey.equals("killmee")) {
-                    MongoHelper.dropCollection(CategoryModel.class);
-                    responseStr = "{\"dropped\":true}";
-                }
-                else {
-                    responseStr = "{\"dropped\":false}";
-                }
-                return Utils.createResponse(responseStr, contentType, HttpResponseStatus.OK);
-            }
-            else if(requestUri.matches("/api/v2/getPublishedData.*")) {
+            if(requestUri.matches("/api/v2/getPublishedData.*")) {
                 ResponseWrapper responseWrapper = categoryService.getPublishedData();
                 return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
@@ -114,21 +71,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
             }
         }
         else if(request.getMethod().equals(HttpMethod.POST)) {
-            if(requestUri.matches("/api/v1/add.*")) {
-                CategoryModel category = mapper.readValue(requestPayload, CategoryModel.class);
-                apiService.saveObjectToMongo(category);
-                String responseStr = "{\"success\":true,\"id\":\"" + category.getId() + "\"}";
-                return Utils.createResponse(responseStr, contentType, HttpResponseStatus.OK);
-            }
-            else if(requestUri.matches("/api/v1/addNews.*")) {
-                String category_id = Utils.getURLParam(urlParameters, "category_id");
-                CategoryModel categoryModel = MongoHelper.findById(category_id, CategoryModel.class);
-                NewsFeedMetaData newsFeedMetaData = mapper.readValue(requestPayload, NewsFeedMetaData.class);
-                categoryModel.getNewsList().add(newsFeedMetaData);
-                MongoHelper.save(categoryModel);
-                return Utils.createResponse("{\"success\":true}", contentType, HttpResponseStatus.OK);
-            }
-            else if(requestUri.matches("/api/v2/addCategory.*")) {
+            if(requestUri.matches("/api/v2/addCategory.*")) {
                 ResponseWrapper responseWrapper = categoryService.createCategory(requestPayload);
                 return Utils.createResponse(mapper.writeValueAsString(responseWrapper), contentType, HttpResponseStatus.OK);
             }
