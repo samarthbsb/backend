@@ -5,7 +5,6 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpMethod;
@@ -18,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.sv.newsfeeds.helpers.MongoHelper;
 import com.sv.newsfeeds.models.CategoryDataModel;
@@ -36,9 +36,6 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
     ApiService                  apiService;
 
     @Autowired
-    ObjectMapper                mapper;
-
-    @Autowired
     CategoryService             categoryService;
 
     private static final String contentType = "application/json";
@@ -46,6 +43,7 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
 
     @Override
     public HttpResponse handleRequest(String requestUri, String requestPayload, MessageEvent event, HttpRequest request) throws Exception {
+        ObjectMapper mapper = Utils.getObjectMapper();
         Map<String, List<String>> urlParameters = Utils.getUrlParameters(requestUri);
 
         if(requestUri.matches("/api/v2/addNewsFeed.*")) {

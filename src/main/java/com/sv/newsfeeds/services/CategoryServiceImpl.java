@@ -1,5 +1,13 @@
 package com.sv.newsfeeds.services;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
+
 import com.mongodb.WriteResult;
 import com.sv.newsfeeds.Utils.Utils;
 import com.sv.newsfeeds.helpers.MongoHelper;
@@ -7,18 +15,10 @@ import com.sv.newsfeeds.models.CategoryDataModel;
 import com.sv.newsfeeds.models.NewsFeedDataModel;
 import com.sv.newsfeeds.wrappers.ResponseWrapper;
 
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by samarth on 17/11/14.
  */
-@Component
+@Service
 public class CategoryServiceImpl implements CategoryService {
 
     /**
