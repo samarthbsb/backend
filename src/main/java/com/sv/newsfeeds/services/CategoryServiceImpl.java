@@ -1,11 +1,12 @@
-package newsfeeds.services;
+package com.sv.newsfeeds.services;
 
 import com.mongodb.WriteResult;
-import newsfeeds.Utils.Utils;
-import newsfeeds.helpers.MongoHelper;
-import newsfeeds.models.CategoryDataModel;
-import newsfeeds.models.NewsFeedDataModel;
-import newsfeeds.wrappers.ResponseWrapper;
+import com.sv.newsfeeds.Utils.Utils;
+import com.sv.newsfeeds.helpers.MongoHelper;
+import com.sv.newsfeeds.models.CategoryDataModel;
+import com.sv.newsfeeds.models.NewsFeedDataModel;
+import com.sv.newsfeeds.wrappers.ResponseWrapper;
+
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;

@@ -1,7 +1,8 @@
-package newsfeeds.services;
+package com.sv.newsfeeds.services;
 
-import newsfeeds.wrappers.ResponseWrapper;
 import org.springframework.data.mongodb.core.query.Update;
+
+import com.sv.newsfeeds.wrappers.ResponseWrapper;
 
 /**
  * Created by samarth on 17/11/14.

@@ -1,4 +1,4 @@
-package newsfeeds.models;
+package com.sv.newsfeeds.models;
 
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;

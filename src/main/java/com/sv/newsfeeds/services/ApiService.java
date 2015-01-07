@@ -1,6 +1,6 @@
-package newsfeeds.services;
+package com.sv.newsfeeds.services;
 
-import newsfeeds.helpers.MongoHelper;
+import com.sv.newsfeeds.helpers.MongoHelper;
 
 /**
  * Created by samarth on 30/10/14.

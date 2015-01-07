@@ -1,4 +1,4 @@
-package newsfeeds.wrappers;
+package com.sv.newsfeeds.wrappers;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -16,7 +16,6 @@ public class ResponseWrapper implements Serializable {
     public String getStatus() {
         return status;
     }
-
 
     public void setStatus(String status) {
         this.status = status;

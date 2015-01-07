@@ -1,4 +1,4 @@
-package newsfeeds.models;
+package com.sv.newsfeeds.models;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;

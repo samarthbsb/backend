@@ -1,9 +1,10 @@
-package newsfeeds.helpers;
+package com.sv.newsfeeds.helpers;
 
 import com.mongodb.DBCollection;
 import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
-import newsfeeds.config.SpringMongoConfig;
+import com.sv.newsfeeds.config.SpringMongoConfig;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.MongoOperations;

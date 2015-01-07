@@ -1,4 +1,4 @@
-package newsfeeds.Utils;
+package com.sv.newsfeeds.Utils;
 
 import org.codehaus.jackson.map.ObjectMapper;
 

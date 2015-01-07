@@ -1,4 +1,4 @@
-package newsfeeds.config;
+package com.sv.newsfeeds.config;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
