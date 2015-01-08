@@ -28,9 +28,10 @@ public class NewsFeedsRequestHandler implements IUrlRequestHandler {
 
     private static final String contentType = "application/json";
 
+    private ObjectMapper mapper = com.sv.newsfeeds.Utils.Utils.getObjectMapper();
+
     @Override
     public HttpResponse handleRequest(String requestUri, String requestPayload, MessageEvent event, HttpRequest request) throws Exception {
-        ObjectMapper mapper = com.sv.newsfeeds.Utils.Utils.getObjectMapper();
         Map<String, List<String>> urlParameters = Utils.getUrlParameters(requestUri);
 
         if(requestUri.matches("/api/v2/addNewsFeed.*")) {
